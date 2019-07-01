@@ -1,0 +1,456 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 Calibri-Bold;\f1\fnil\fcharset0 Calibri;\f2\fnil\fcharset0 Calibri-BoldItalic;
+\f3\froman\fcharset0 Times-Roman;\f4\froman\fcharset0 Times-Bold;\f5\fnil\fcharset0 Menlo-Bold;
+\f6\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red38\green38\blue38;\red255\green255\blue255;\red193\green193\blue193;
+\red18\green144\blue189;\red47\green180\blue29;\red0\green0\blue0;\red64\green11\blue217;}
+{\*\expandedcolortbl;;\cssrgb\c20000\c20000\c20000;\cssrgb\c100000\c100000\c100000;\cssrgb\c80000\c80000\c80000;
+\cssrgb\c0\c63137\c78824;\cssrgb\c20238\c73898\c14947;\csgray\c0;\cssrgb\c32308\c18668\c88227;}
+\paperw11900\paperh16840\vieww25400\viewh16000\viewkind0
+\deftab720
+\pard\pardeftab720\sl276\slmult1\sa200\qc\partightenfactor0
+
+\f0\b\fs28 \cf0 Connecting a Raspberry Pi with AWS Internet of Things (IoT) Service
+\fs24 \
+\pard\pardeftab720\sl276\slmult1\sa200\partightenfactor0
+\cf0 \
+Things you will need  (hardware)
+\f1\b0\fs22 \
+
+\fs20 Raspberry Pi device\
+Micro SD card\
+HDMI cable\
+HDMI output compatible monitor or a TV\
+Keyboard and mouse\
+5v output charger\
+
+\f0\b\fs24 Things you will need (software services)
+\f1\b0\fs22 \
+
+\fs20 NOOBS OS.\
+OpenSSL version 1.0.1+ (TLS version 1.2)\
+AWS IoT Service.\
+\
+
+\f0\b\fs24 Below are the steps 
+\f1\b0\fs20 \
+Step 1: Install NOOBS OS in the Raspberry Pi\
+Step 2: AWS IoT Configurations\
+Step 3: Setting up Raspberry Pi to connect with AWS IoT\
+Step 4: Create publisher.py and run\
+\
+
+\fs24 Step 1: 
+\fs20 OS is already install\
+	Now, perform the below details:\
+		cat /etc/os-release  //shows os version\
+		sudo apt-get update 	//downloads the package lists from the repositories and 					     "updates" them to get information on the newest 					                    versions of packages and their dependencies\
+		sudo apt-get dist-upgrade	   // In addition to performing the function of upgrade, 					        also intelligently handles changing dependencies 					        with new versions of packages\
+		python -version            //display python version [Python 2.7+ or Python 3.3+ (With 					noobs-2.7.0 we also get Python 3.5.3)]\
+		open the Python shell and type the below given commands: ssl.OPENSSL_VERSION\
+
+\f0\b\fs24 Step 2
+\f1\b0\fs20 : \
+	
+\f0\b\fs24 Sign in to the AWS IoT Console
+\f1\b0\fs20 \
+	
+\f0\b 2.1 
+\f1\b0 Turn on your Raspberry Pi, and confirm that it is connected to the internet.\
+\pard\pardeftab720\li710\fi-710\sl276\slmult1\sa200\partightenfactor0
+\cf0 	
+\f0\b 2.2 
+\f1\b0 Sign in to the AWS Management Console, and then open the AWS IoT console at       {\field{\*\fldinst{HYPERLINK "https://aws.amazon.com/iot"}}{\fldrslt https://aws.amazon.com/iot}}. On the Welcome page, choose Get started.\
+\
+	\
+\
+
+\f0\b 	2.3 
+\f1\b0 If this is the first time you are using the AWS IoT console, you see the Welcome to the AWS IoT Console page. If it's not your first time using the the AWS IoT console, you see the 
+\f0\b Monitor 
+\f1\b0 page. In the left navigation pane, choose 
+\f0\b Manage
+\f1\b0 , and then choose 
+\f0\b Things
+\f1\b0 .\
+\
+		
+\f0\b 2.4 
+\f1\b0 If you have not created any things yet, you see the You don't have any things yet page. Choose 
+\f0\b Register a thing
+\f1\b0 . \
+\
+	\
+	If you have already created a thing, you see the Things page. Choose Create at the top right of that page.\
+\
+	
+\f0\b\fs24 Create and Attach a Thing (Device)\
+
+\f1\b0\fs20 	A 
+\f0\b thing 
+\f1\b0 represents a device whose status or data is stored in the AWS Cloud. The device's status or data is stored in a JSON document known as the device's 
+\f2\i\b shadow
+\f1\i0\b0 . The shadow is used to both store and retrieve state information. The Device Shadow service maintains a shadow for each device that is connected to AWS IoT.\
+		1.On the 
+\f0\b Creating AWS IoT things 
+\f1\b0 page, choose 
+\f0\b Create a single thing
+\f1\b0 .\
+\pard\pardeftab720\li710\sl276\slmult1\sa200\partightenfactor0
+\cf0 	\
+\
+2. On the 
+\f0\b Add your device to the thing registry 
+\f1\b0 page, enter 
+\f0\b MyRaspberryPi 
+\f1\b0 for the device 	    
+\f0\b Name
+\f1\b0 . Leave the default values for all the other fields, and then choose 
+\f0\b Next
+\f1\b0 .\
+\pard\pardeftab720\li710\sa200\partightenfactor0
+\cf0 \
+\
+\
+3.On the 
+\f0\b Add a certificate 
+\f1\b0 for your 
+\f0\b thing 
+\f1\b0 page, choose 
+\f0\b Create certificate
+\f1\b0 . This generates an          	   X.509 certificate and key pair.\
+\
+\
+\
+4. On your Raspberry Pi, create a working directory named 
+\f0\b demo-cert
+\f1\b0 . This is where your certificate and key files will be stored. \
+Total 4 files should be there \
+\
+ Below 3  from security menu\
+\
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trcbpat3 \tamart200 \tamarb200 \trbrdrt\brdrs\brdrw20\brdrcf4 \trbrdrl\brdrs\brdrw20\brdrcf4 \trbrdrr\brdrs\brdrw20\brdrcf4 
+\clvertalc \clshdrawnil \clwWidth3640\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3027\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1853\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+
+\f3\fs28 \cf2 \expnd0\expndtw0\kerning0
+A certificate for this thing\cell 
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+\cf2 4ac1f5001c.cert.pem\cell 
+\pard\intbl\itap1\pardeftab720\sl380\qr\partightenfactor0
+
+\f4\b \cf5 Download
+\f3\b0 \cf2 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trcbpat3 \tamart200 \tamarb200 \trbrdrl\brdrs\brdrw20\brdrcf4 \trbrdrr\brdrs\brdrw20\brdrcf4 
+\clvertalc \clshdrawnil \clwWidth3640\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrs\brdrw20\brdrcf4 \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3027\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrs\brdrw20\brdrcf4 \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1853\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrs\brdrw20\brdrcf4 \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+\cf2 A public key\cell 
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+\cf2 4ac1f5001c.public.key\cell 
+\pard\intbl\itap1\pardeftab720\sl380\qr\partightenfactor0
+
+\f4\b \cf5 Download
+\f3\b0 \cf2 \cell \row
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trcbpat3 \tamart200 \tamarb200 \trbrdrl\brdrs\brdrw20\brdrcf4 \trbrdrb\brdrs\brdrw20\brdrcf4 \trbrdrr\brdrs\brdrw20\brdrcf4 
+\clvertalc \clshdrawnil \clwWidth3640\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrs\brdrw20\brdrcf4 \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3027\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrs\brdrw20\brdrcf4 \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1853\clftsWidth3 \clmaxh800 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrs\brdrw20\brdrcf4 \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl200 \clpadb200 \clpadr200 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+\cf2 A private key\cell 
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+\cf2 4ac1f5001c.private.key\cell 
+\pard\intbl\itap1\pardeftab720\sl380\qr\partightenfactor0
+
+\f4\b \cf5 Download
+\f3\b0 \cf2 \cell \lastrow\row
+\pard\tx23860\pardeftab720\li710\sa200\partightenfactor0
+
+\f1\fs20 \cf0 \kerning1\expnd0\expndtw0 \
+\pard\pardeftab720\li710\sa200\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sl340\partightenfactor0
+
+\f4\b\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+You also need to download a root CA for AWS IoT:\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trcbpat3 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2692\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1453\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl340\partightenfactor0
+
+\f3\b0 \cf2 \cb1 A root CA for AWS IoT\cell 
+\pard\intbl\itap1\pardeftab720\sl380\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://docs.aws.amazon.com/iot/latest/developerguide/managing-device-certs.html#server-authentication"}}{\fldrslt 
+\f4\b \cf5 Download}}\cell \lastrow\row
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f4\b \cf3 \cb5 Activate\
+\
+\
+
+\f1\b0\fs20 \cf0 \cb1 \kerning1\expnd0\expndtw0 \
+\pard\pardeftab720\li710\sa200\partightenfactor0
+\cf0 \
+On the 
+\f0\b Certificate created
+\f1\b0 ! page, download your public and private keys, certificate, and root certificate authority (CA). Save them in the deviceSDK directory. Choose 
+\f0\b Activate 
+\f1\b0 to activate the X.509 certificate, and then choose 
+\f0\b Attach a policy.\
+\
+\
+
+\f1\b0 \
+5. On the 
+\f0\b Add a policy for your thing 
+\f1\b0 page, choose 
+\f0\b Register Thing
+\f1\b0 .\
+\
+\
+\
+6. Navigate to the AWS IoT console. In the left navigation pane, choose 
+\f0\b Secure, Policies
+\f1\b0 .\
+	     If you haven't created an AWS IoT policy, you see 
+\f0\b the You don't have any policies yet
+\f1\b0       page.\
+     Choose 
+\f0\b Create a policy
+\f1\b0 .\
+\
+
+\f0\b \
+\
+
+\f1\b0 If you have already created a 
+\f0\b policy
+\f1\b0 , you see the Policies page. Choose 
+\f0\b Create 
+\f1\b0 at the top right of that page.\
+7. On the 
+\f0\b Create a policy 
+\f1\b0 page, enter a 
+\f0\b Name 
+\f1\b0 for the policy. For 
+\f0\b Action
+\f1\b0 , enter 
+\f0\b iot:*. 
+\f1\b0 For 	         
+\f0\b 	    Resource ARN
+\f1\b0 , enter 
+\f0\b *
+\f1\b0 . Under 
+\f0\b Effect
+\f1\b0 , choose 
+\f0\b Allow
+\f1\b0 , and then choose 
+\f0\b Create
+\f1\b0 . This policy  	    allows your Raspberry Pi to publish messages to AWS IoT.\
+\
+8.In the AWS IoT console, choose 
+\f0\b Manage, Things
+\f1\b0 . On the Things page, choose 			   
+\f0\b MyRaspberryPi
+\f1\b0 ( Whatever name you have given)\
+\
+\
+\
+\
+9. On the thing's 
+\f0\b Details 
+\f1\b0 page, in the left navigation pane, choose 
+\f0\b Interact
+\f1\b0 .\
+\
+\
+10. Make a note of the REST API endpoint. You will need it to connect to your device shadow. 	      In the navigation pane, choose 
+\f0\b Security
+\f1\b0 .\
+\
+\
+11. Choose the certificate that you created earlier.\
+\
+\
+\
+12. On the certificate's 
+\f0\b Details 
+\f1\b0 page, in 
+\f0\b Actions
+\f1\b0 , choose 
+\f0\b Attach policy.
+\f1\b0 \
+\
+\
+\
+13. On the 
+\f0\b Attach policies to certificate(s) 
+\f1\b0 page, choose the policy you created, and then              	      choose 
+\f0\b Attach
+\f1\b0 .\
+\
+\
+\
+\pard\pardeftab720\sa200\partightenfactor0
+
+\f0\b \cf0 Step 3
+\f1\b0 : 		Create a directory "paho.mqtt.python" in raspberry pi ( confect using FileZilla /putty etc ) \
+		git clone {\field{\*\fldinst{HYPERLINK "https://github.com/eclipse/paho.mqtt.python.git"}}{\fldrslt https://github.com/eclipse/paho.mqtt.python.git}}\
+		cd paho.mqtt.python\
+		sudo python setup.py install\
+\pard\tx22952\tx24712\pardeftab720\sa200\partightenfactor0
+\cf0 		\
+\pard\pardeftab720\sa200\partightenfactor0
+\cf0 		Create a directory "aws-iot-device-sdk-python"\
+		git clone {\field{\*\fldinst{HYPERLINK "https://github.com/aws/aws-iot-device-sdk-python.git"}}{\fldrslt https://github.com/aws/aws-iot-device-sdk-python.git}}\
+		cd aws-iot-device-sdk-python\
+		sudo python setup.py install\
+\
+
+\f0\b Step 4
+\f1\b0 : \
+\
+\
+
+\f0\b 4.1
+\f1\b0  Copy the Demo from the Zip file from google Drive  to /home/pi       to raspberry device \
+And have below structure\
+Download the Root CA with this command or you can also copy from aws console and create a root-CA.pem file and copy to it\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f5\b\fs22 \cf6 \CocoaLigature0 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  wget https://www.amazontrust.com/repository/AmazonRootCA1.pem\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf0 \CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f5\b\fs22 \cf6 \CocoaLigature0 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  ls\
+
+\f5\b \cf8 AWSIoTPythonSDK
+\f6\b0 \cf7   
+\f5\b \cf8 demo-cert
+\f6\b0 \cf7   
+\f5\b \cf8 pahomqttpython
+\f6\b0 \cf7   publisher.py\
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  ls demo-cert/\
+iot-cert.pem.crt  private-key.pem.key  public-key.pem.key  root-CA.pem\
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+\pard\pardeftab720\sa200\partightenfactor0
+
+\f1\fs20 \cf0 \CocoaLigature1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa200\partightenfactor0
+
+\f0\b \cf0 \
+\pard\tx258\pardeftab720\sa200\partightenfactor0
+
+\f1\b0 \cf0 \
+Do the changes in publisher.py file from the \'93Interact Menu of was console \'93 arn and client id details\
+\
+\
+Run the publisher.py to publish the data \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f5\b\fs22 \cf6 \CocoaLigature0 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  \
+
+\f5\b \cf6 pi@raspberrypi
+\f6\b0 \cf7 :
+\f5\b \cf8 ~/Demo $
+\f6\b0 \cf7  sudo python3 publisher.py \
+\pard\tx258\pardeftab720\sa200\partightenfactor0
+
+\f1\fs20 \cf0 \CocoaLigature1 \
+\
+\
+Now check the shadow part in left side menu ,it will publish the son data there.\
+\pard\tx258\pardeftab720\sa200\partightenfactor0
+
+\f0\b \cf0 publisher.py \
+\pard\tx258\pardeftab720\sa200\partightenfactor0
+
+\f1\b0 \cf0 \
+		\
+\pard\pardeftab720\sa200\partightenfactor0
+\cf0 \
+\pard\pardeftab720\li710\sa200\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+\
+\
+\pard\pardeftab720\li710\sl276\slmult1\sa200\partightenfactor0
+\cf0 \
+}
