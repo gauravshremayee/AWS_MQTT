@@ -4,7 +4,7 @@ import time
 import argparse
 import json
 
-host = "a13547i0vrqblj-ats.iot.us-east-2.amazonaws.com"
+host = "XXXXXXX-ats.iot.us-east-2.amazonaws.com"
 certPath = "/home/pi/Demo/demo-cert/"
 clientId = "RaspberryPi"
 topic = "$aws/things/RaspberryPi/shadow/update"
